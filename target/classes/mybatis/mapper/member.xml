@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.study.member.dao.IMemberDao">
+	<sql id="search">
+		<if test="@org.apache.commons.lang3.StringUtils@isNotBlank(searchJob)">
+			  AND mem_job = #{searchJob}
+		</if>
+		<if test="@org.apache.commons.lang3.StringUtils@isNotBlank(searchLike)">
+			  AND mem_like = #{searchLike}
+		</if>
+		<if test="@org.apache.commons.lang3.StringUtils@isNotBlank(searchWord)">
+			<choose>
+				<when test="searchType=='NM'">
+					  AND mem_name LIKE '%' || #{searchWord} || '%'
+				</when>
+				<when test="searchType=='ID'">
+					  AND mem_id LIKE '%' || #{searchWord} || '%'
+				</when>
+				<when test="searchType=='HP'">
+					  AND mem_hp LIKE '%' || #{searchWord} || '%'
+				</when>
+			</choose>
+		</if>
+	</sql>
+
+	<select id="getMemberCount" parameterType="com.study.member.vo.MemberSearchVO" resultType="int">
+		SELECT COUNT(*)
+		FROM member
+		WHERE 1 = 1
+		<include refid="search"></include>
+	</select>
+	
+	<select id="getMemberList" parameterType="com.study.member.vo.MemberSearchVO" resultType="com.study.member.vo.MemberVO">
+		SELECT *
+		FROM (
+			SELECT a.*, ROWNUM AS rnum
+			FROM (
+				SELECT mem_id,   mem_pass,    mem_name,
+					   TO_CHAR(mem_bir,'YYYY-MM-DD') AS mem_bir,
+						mem_zip,  mem_add1,    mem_add2,
+						mem_hp,   mem_mail,    mem_job,
+						b.comm_nm AS mem_job_nm,
+						c.comm_nm AS mem_like_nm,
+						mem_like, mem_mileage, mem_del_yn
+				FROM member a, comm_code b, comm_code c
+				WHERE a.mem_job = b.comm_cd
+				  AND a.mem_like = c.comm_cd
+				<include refid="search"></include>
+				ORDER BY mem_id
+		          ) a
+		     ) b
+		WHERE rnum BETWEEN #{firstRow} AND #{lastRow}
+	</select>
+	
+	<select id="getMember" parameterType="String" resultType="com.study.member.vo.MemberVO">
+		SELECT mem_id,      mem_pass,  mem_name,
+		       TO_CHAR(mem_bir, 'YYYY-MM-DD') AS mem_bir,
+		       mem_zip,     mem_add1,  mem_add2,
+				mem_hp,      mem_mail,
+				mem_job,  b.comm_nm  AS mem_job_nm,
+		       mem_like, c.comm_nm  AS mem_like_nm,
+		       mem_mileage, mem_del_yn 
+		FROM member a, comm_code b, comm_code c
+		WHERE mem_id = #{a}
+		  AND a.mem_job = b.comm_cd
+		  AND a.mem_like = c.comm_cd
+	</select>
+	
+	<select id="insertMember" parameterType="com.study.member.vo.MemberVO">
+		INSERT INTO member VALUES (
+			#{memId},
+			#{memPass},
+			#{memName},
+			#{memBir},
+			#{memZip},
+			#{memAdd1},
+			#{memAdd2},
+			#{memHp},
+			#{memMail},
+			#{memJob},
+			#{memLike},
+			0,
+			'N'
+		)
+	</select>
+	
+	<select id="updateMember" parameterType="com.study.member.vo.MemberVO">
+		UPDATE member SET
+			mem_pass = #{memPass},
+			mem_name = #{memName},
+			mem_bir = #{memBir},
+			mem_zip = #{memZip},
+			mem_add1 = #{memAdd1},
+			mem_add2 = #{memAdd2},
+			mem_hp = #{memHp},
+			mem_mail = #{memMail},
+			mem_job = #{memJob},
+			mem_like = #{memLike}
+		WHERE mem_id = #{memId}
+	</select>
+	
+	<select id="deleteMember" parameterType="com.study.member.vo.MemberVO">
+		UPDATE member SET
+			mem_del_yn = 'Y',
+			mem_mileage = 0
+		WHERE mem_id = #{memId}
+	</select>
+	
+	<select id="getUserRole" parameterType="String" resultType="String">
+		SELECT LISTAGG(role_nm, ',') WITHIN GROUP(ORDER BY role_nm)
+		FROM user_role
+		WHERE user_id = #{userId}
+	</select>
+</mapper>
