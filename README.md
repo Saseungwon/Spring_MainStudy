@@ -1,1 +1,2 @@
-# Spring_addStep
+# 스프링4-5
+### e-mail 인증 기능 추가
