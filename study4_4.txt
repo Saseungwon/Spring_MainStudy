@@ -1,0 +1,14 @@
+reply 테이블 만들기
+replyVO 만들기  com.study.reply.vo
+Reply
+뷰영역 스크립트 복사
+ReplyDAO, SERVICE, CONTROLLER
+
+
+
+
+
+
+
+
+

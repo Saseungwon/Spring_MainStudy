@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.study.code.dao.ICommonCodeDao">
+
+<select id="getCodeListByParent" parameterType="String" resultType="com.study.code.vo.CodeVO">
+	
+select comm_cd,comm_nm,comm_parent,comm_ord  
+from comm_code                               
+where comm_parent= #{asdddsadhgs}                        
+</select>
+
+
+
+
+
+
+
+</mapper>

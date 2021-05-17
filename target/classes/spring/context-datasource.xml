@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:cache="http://www.springframework.org/schema/cache"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xmlns:mybatis-spring="http://mybatis.org/schema/mybatis-spring"
+	xmlns:util="http://www.springframework.org/schema/util"
+	xsi:schemaLocation="http://www.springframework.org/schema/cache http://www.springframework.org/schema/cache/spring-cache-4.3.xsd
+		http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-4.3.xsd
+		http://mybatis.org/schema/mybatis-spring http://mybatis.org/schema/mybatis-spring-1.2.xsd
+		http://www.springframework.org/schema/beans https://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.3.xsd
+		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.3.xsd
+		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-4.3.xsd">
+
+	<!--DB관련 -->
+	<util:properties id="inbum"
+		location="classpath:spring/appconfig.properties"></util:properties>
+	<bean id="dataSource"
+		class="org.apache.commons.dbcp2.BasicDataSource"
+		destroy-method="close">
+		<property name="driverClassName"
+			value="#{inbum['jdbc.driverClassName']}" />
+		<property name="url" value="#{inbum['jdbc.url']}" />
+		<property name="username" value="#{inbum['jdbc.username']}" />
+		<property name="password" value="#{inbum['jdbc.password']}" />
+		<property name="defaultAutoCommit"
+			value="#{inbum['jdbc.defaultAutoCommit']}" />
+		<property name="maxTotal" value="#{inbum['jdbc.maxTotal']}" />
+		<property name="minIdle" value="#{inbum['jdbc.minIdle']}" />
+		<property name="validationQuery"
+			value="#{inbum['jdbc.validationQuery']}" />
+	</bean>
+
+	<!-- SqlSession setup for MyBatis Database Layer -->
+	<bean id="sqlSession"
+		class="org.mybatis.spring.SqlSessionFactoryBean">
+		<property name="dataSource" ref="dataSource" />
+		<property name="configLocation"
+			value="classpath:mybatis/mybatis-config.xml" />
+		<property name="mapperLocations"
+			value="classpath:mybatis/mapper/*.xml" />
+	</bean>
+
+
+	<!-- @Mapper -->
+	<mybatis-spring:scan base-package="com.study"
+		annotation="org.apache.ibatis.annotations.Mapper" />
+
+
+
+
+
+</beans>
