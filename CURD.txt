@@ -1,0 +1,38 @@
+1. DB에 테이블만들기
+CREATE TABLE student (
+      std_no  NUMBER  PRIMARY key
+    , std_name varchar2(20)
+    , std_sex  varchar2(10)
+    , std_birth date);
+2.더미데이터 넣기 
+create SEQUENCE student_seq;
+insert into crud_student  values(
+    student_seq.nextval
+    , '한창희'
+    , 'M'
+    , sysdate
+    );
+    commit;
+2. 스프링 설정  (ppt참고)
+
+3. StudentVO 만들기, ResultMessageVO 만들기 
+
+4.com.study 밑에 controller,service,dao 만들기  어노테이션잘 붙이기 
+5.Mapper  student.xml 만들기
+6.view 만들기 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

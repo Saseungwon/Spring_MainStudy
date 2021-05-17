@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.study.student.dao.IStudentDao">
+<select id="getStudentList" resultType="com.study.student.vo.StudentVO" >
+	select std_no,std_name,std_sex,to_char(std_birth,'YYYY-MM-DD') AS std_birth   
+	from student
+</select>
+
+<select id="getStudent"  resultType="com.study.student.vo.StudentVO" parameterType="int">
+	select std_no,std_name,std_sex,to_char(std_birth,'YYYY-MM-DD') AS std_birth     
+	from student
+	where std_no=#{std_no}
+</select>
+
+<update id="updateStudent" parameterType="com.study.student.vo.StudentVO" >
+	update student set 
+	std_name=#{stdName},
+	std_sex=#{stdSex},
+	std_birth=#{stdBirth}
+	where std_no=#{stdNo}
+</update>
+
+<delete id="deleteStudent" parameterType="int">
+	delete from student
+	where std_no=#{stdNo}
+</delete>
+
+<insert id="insertStudent" parameterType="com.study.student.vo.StudentVO">
+	insert into student  values(
+    student_seq.nextval
+    , #{stdName}
+    , #{stdSex}
+    , #{stdBirth}
+    )
+</insert>
+
+</mapper>
