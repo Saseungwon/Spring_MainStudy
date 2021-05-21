@@ -1,0 +1,55 @@
+서버킬떄 error creating bean with name org~~~~validation
+hibernate는 jdk버전에 민감.. 근데 또 컴퓨터에 따라 다른데  해결은 버전 맞춰가면서 해야되는데 쉽지않으니까 
+인터넷에있는되는걸로하자 
+
+
+
+<!-- validation -->
+<dependency>
+   <groupId>javax.validation</groupId>
+   <artifactId>validation-api</artifactId>
+   <version>1.0.0.GA</version>
+</dependency>
+<dependency>
+   <groupId>org.hibernate</groupId>
+   <artifactId>hibernate-validator</artifactId>
+   <version>4.2.0.Final</version>
+</dependency>
+
+
+
+<!-- https://mvnrepository.com/artifact/javax.validation/validation-api -->
+		<dependency>
+			<groupId>javax.validation</groupId>
+			<artifactId>validation-api</artifactId>
+			<version>1.1.0.Final</version>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/org.hibernate.validator/hibernate-validator -->
+		<dependency>
+			<groupId>org.hibernate.validator</groupId>
+			<artifactId>hibernate-validator</artifactId>
+			<version>6.1.5.Final</version>
+		</dependency>
+
+
+
+
+<!-- https://mvnrepository.com/artifact/javax.validation/validation-api -->
+		<dependency>
+			<groupId>javax.validation</groupId>
+			<artifactId>validation-api</artifactId>
+			<version>2.0.1.Final</version>
+		</dependency>
+
+		<!-- https://mvnrepository.com/artifact/org.hibernate.validator/hibernate-validator -->
+		<dependency>
+			<groupId>org.hibernate.validator</groupId>
+			<artifactId>hibernate-validator</artifactId>
+			<version>6.1.5.Final</version>
+		</dependency>
+
+
+
+
+윤가영,염호준.심이안 
+(프로젝트클린,메이븐클린,빌드패스, 서버클린, 서버 moduleXml 체크)

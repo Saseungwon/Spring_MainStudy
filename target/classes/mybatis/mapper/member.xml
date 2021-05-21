@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.study.member.dao.IMemberDao">
+<sql id="search"> <if test="@org.apache.commons.lang3.StringUtils@isNotBlank(searchJob)">
+			AND mem_job = #{searchJob}
+		</if>
+		<if test="@org.apache.commons.lang3.StringUtils@isNotBlank(searchLike)">
+			AND mem_like = #{searchLike} 
+		</if>
+
+		<if test="@org.apache.commons.lang3.StringUtils@isNotBlank(searchWord)">
+			<choose>
+				<when test='searchType=="NM"'>AND mem_name LIKE '%'|| #{searchWord} || '%' </when>
+				<when test='searchType=="ID"'>AND mem_id LIKE '%'|| #{searchWord} || '%' </when>
+				<when test='searchType=="HP"'>AND mem_hp LIKE '%'|| #{searchWord} || '%'</when>
+
+			</choose>  
+		</if></sql>
+	<select id="getMemberCount" resultType="int"   parameterType="com.study.member.vo.MemberSearchVO">
+		select count(*) from member
+		where 1=1
+	<include refid="search"></include>
+		
+	</select>
+
+	<select id="getMemberList"
+		resultType="com.study.member.vo.MemberVO"
+		parameterType="com.study.member.vo.MemberSearchVO">
+		select * from
+		(select a.*,rownum AS rnum from (
+
+
+		select mem_id ,mem_pass ,mem_name
+		,to_char(mem_bir,'YYYY-MM-DD') AS mem_bir
+		,mem_zip ,mem_add1 ,mem_add2
+		,mem_hp ,mem_mail ,mem_job
+		,b.comm_nm as mem_job_nm
+		,c.comm_nm as mem_like_nm
+		,mem_like ,mem_mileage ,mem_del_yn
+		from member a,comm_code b, comm_code c  
+		where a.mem_job=b.comm_cd
+		AND a.mem_like=c.comm_cd
+		<include refid="search" />
+		order by mem_id
+		) a ) b
+		where rnum between #{firstRow} and #{lastRow}
+
+	</select>
+
+
+	<select id="getMember" resultType="com.study.member.vo.MemberVO"
+		parameterType="String">
+		select mem_id, mem_pass, mem_name,
+		to_char(mem_bir,'YYYY-MM-DD') AS mem_bir, mem_zip, mem_add1,
+		mem_add2, mem_hp, mem_mail,
+		mem_job, b.comm_nm AS mem_job_nm,
+		mem_like, c.comm_nm As mem_like_nm,
+		mem_mileage,mem_del_yn
+		from member a, comm_code b, comm_code c
+		where mem_id= #{memId}
+		AND a.mem_job = b.comm_cd
+		AND a.mem_like = c.comm_cd
+	</select>
+	<update id="updateMember"
+		parameterType="com.study.member.vo.MemberVO">
+		update member set
+		mem_pass= #{memPass} ,
+		mem_name= #{memName} ,
+		mem_bir= #{memBir} ,
+		mem_zip= #{memZip} ,
+		mem_add1= #{memAdd1} ,
+		mem_add2= #memAdd2} ,
+		mem_hp= #{memHp} ,
+		mem_mail= #{memMail} ,
+		mem_job= #{memJob} ,
+		mem_like= #{memLike}
+		where mem_id = #{memId}
+	</update>
+
+	<update id="deleteMember"
+		parameterType="com.study.member.vo.MemberVO">
+		update member set mem_del_yn= 'Y',
+		mem_mileage=0
+		where mem_id =#{memId}
+	</update>
+
+	<insert id="insertMember"
+		parameterType="com.study.member.vo.MemberVO">
+		insert into member values(
+		#{memId} ,
+		#{memPass} ,
+		#{memName} ,
+		#{memBir} ,
+		#{memZip} ,
+		#{memAdd1} ,
+		#{memAdd2} ,
+		#{memHp} ,
+		#{memMail} ,
+		#{memJob} ,
+		#{memLike} ,
+		0 ,
+		'N'
+		)
+	</insert>
+
+
+
+
+
+</mapper>

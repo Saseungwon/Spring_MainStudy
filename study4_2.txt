@@ -1,0 +1,19 @@
+study4_2  : validation,유효성검사 
+
+pom.xml에 dependency 추가
+
+ModifyType,RegistType interface 만들기 (com.study.common.valid) 
+(VO에 @추가해주는데 VO는1갠데 Modify에서만 검사하고싶은게 있고,
+ Regist에서만 검사하고 싶은게 있는데 그 때 사용 할 거)
+ 
+ Controller에 유효성 필요한 곳에 @Validated 추가({Default.class,***Type.class})
+ 
+ VO 필드에 유효성 annotation 추가  @Notnull,@Empty ,@Email
+ 
+ Controller에 BindingResult error추가   if(error.hasError) 일 때 전화면으로 
+ 
+ jsp화면에서 기본 form태그를 form:form태그로 바꾸기 
+ 
+						 
+
+

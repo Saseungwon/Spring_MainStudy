@@ -1,0 +1,11 @@
+step.jsp 다운
+VO에 필요한 필드  추가(이용악관,개인정보 등)
+Step1,2,3 interface   만들기
+Controller단에서 @ModelAttribute, BindingResult,SessionStatus
+
+
+VO에서 필드에 @validation 추가  (notblank,pattern)
+jsp에 form:form태그 적용하기
+
+
+
