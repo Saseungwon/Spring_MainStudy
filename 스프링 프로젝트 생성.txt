@@ -1,0 +1,59 @@
+스프링 프로젝트 생성 후
+
+1. Maven 설정 변경
+	- Spring 버전 3.1. -> 4.3.XX
+	- java 버전 1.6 -> 1.8
+	- 기타 주요 라이브러리 버전
+
+2. Maven 변경 내역 -> 이클립스 프로젝트에 적용
+	프로젝트에서 팝업 : Maven -> update project (옵션 : Force update of snapshot... 체크)
+	프로젝트에서 팝업 : run as -> maven clean
+					 run as -> maven install
+					 run as -> maven clean : war 제거
+
+가끔 신규 라이브러리 추가 후 Invalid LOC Header 오류가 초반에 나면
+.m2 저장소에서 관련 라이브러리 폴더 삭제해보기
+
+3. 해당 프로젝트 적용 확인
+	속성 - Deployment Assembly : maven 라이브러리 종종 사라짐
+	속성 - Java Build Path 확인
+
+----------------------------------------------------------------------------------------------
+Maven, 이클립스 동시에 적용해서 사용하다 보니
+이클립스 메뉴의 Project의 clean 이후 작업
+
+컨트롤러 먼저 -> 서비스 -> dao -> vo -> DB...
+테이블 먼저 구성 -> vo -> dao...
+어떤것을 먼저 하든 상관 없음
+잘 모를때는 컨트롤러와 뷰(jsp)
+
+자료실 url 구성
+/data, pds, util
+/data/list.wow : 목록
+/data/view.wow : 상세
+...
++ 업로드/다운로드 url 구성
+
+web.xml : 스프링의 매핑 *.wow
+		   만약, wow + 확장자 없는것도 스프링에서 처리 /
+
+com.study.data.web.DataController
+com.study.data.service.XXX
+com.study.data.dao, persist, mapper, sql, db
+com.study.data.vo, dto, domain, model
+
+전자정부에서
+com.study.data.web.DataController
+com.study.data.service.IDataService : 인터페이스
+com.study.data.service.IDataDao <- 구현체는 mybatis가 자동으로 생성
+com.study.data.service.impl.DataServiceImpl <- 서비스 구현체
+com.study.data.vo.DataVO
+
+web.xml에 스프링이 등록되어있고
+스프링의 설정파일의 위치가 web.xml에 기술되어 있습니다.
+
+설정파일, 브라우저에서 컨트롤러 처리없이 jsp가 보이면 안됨
+/WEB-INF/하위에 배치
+/WEB-INF/views에 jsp
+/WEB-INF/classes/spring
+/WEB-INF/classes/mybatis

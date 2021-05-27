@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.study.attach.service.IAttachDao">
+
+	<insert id="insertAttach" parameterType="com.study.attach.vo.AttachVO">
+		INSERT INTO attach (
+		    atch_no
+		    , atch_parent_no
+		    , atch_category
+		    , atch_file_name
+		    , atch_original_name
+		    , atch_file_size
+		    , atch_fancy_size
+		    , atch_content_type
+		    , atch_path
+		    , atch_down_hit
+		    , atch_del_yn
+		    , atch_reg_date
+		) VALUES (
+			<![CDATA[
+			seq_attach.NEXTVAL,
+			#{atchParentNo},
+			#{atchCategory},
+			#{atchFileName},
+			#{atchOriginalName},
+			#{atchFileSize},
+			#{atchFancySize},
+			#{atchContentType},
+			#{atchPath},
+			0,
+			'N',
+			SYSDATE
+			]]>
+		)
+	</insert>
+	
+	<update id="deleteAttaches">
+		DELETE attach
+		 WHERE 1 = 1 /* 의미없는 라인, 배열이 null이거나 length가 0개일때 삭제 안되게 */
+		 <foreach collection="array" item="tj" open="AND atch_no IN (" close=")" separator=", ">
+		 	#{tj}
+		 </foreach>
+	</update>
+	
+	<!-- 글 보기에서 보여줄 첨부파일 정보 -->
+	<select id="getAttachByParentNoList" resultType="com.study.attach.vo.AttachVO">
+		SELECT atch_no
+		       , atch_original_name
+		       , atch_fancy_size
+		       , atch_down_hit
+		FROM attach
+		WHERE atch_category  = #{category}
+		  AND atch_parent_no = #{parentNo}
+		  AND atch_del_yn    = 'N'
+	</select>
+	
+	<select id="getAttach" parameterType="int" resultType="com.study.attach.vo.AttachVO">
+		SELECT atch_no
+		     , atch_parent_no
+		     , atch_category
+		     , atch_file_name
+		     , atch_original_name
+		     , atch_file_size
+		     , atch_fancy_size
+		     , atch_content_type
+		     , atch_path
+		     , atch_down_hit
+		     , atch_del_yn
+		     , atch_reg_date
+		  FROM attach
+		 WHERE atch_no = #{atchNo}
+		   AND atch_del_yn = 'N'
+	</select>
+	
+	<update id="increaseDownHit" parameterType="int">
+		UPDATE attach
+		   SET atch_down_hit = atch_down_hit + 1
+		 WHERE atch_no = #{atchNo}
+	</update>
+
+</mapper>

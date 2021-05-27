@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.study.data.service.IDataBoardDao">
+
+	<!-- 
+		association 1:1 관계
+		collection 1:n 관계
+	 -->
+	<resultMap id="mapForGetBoard" type="dataBoard">
+		<id column="bo_no" property="boNo"/>
+		<result column="bo_title" property="boTitle"/>
+		<result column="bo_writer" property="boWriter"/>
+		<result column="bo_pass" property="boPass"/>
+		<result column="bo_content" property="boContent"/>
+		<result column="bo_ip" property="boIp"/>
+		<result column="bo_hit" property="boHit"/>
+		<result column="bo_reg_date" property="boRegDate"/>
+		<result column="bo_mod_date" property="boModDate"/>
+		<result column="bo_del_yn" property="boDelYn"/>
+		<collection property="attaches" ofType="com.study.attach.vo.AttachVO">
+			<id column="atch_no" property="atchNo"/>
+			<result column="atch_original_name" property="atchOriginalName"/>
+			<result column="atch_fancy_size" property="atchFancySize"/>
+			<result column="atch_down_hit" property="atchDownHit"/>
+		</collection>
+	</resultMap>
+
+	<select id="getBoardCount" parameterType="com.study.data.vo.DataSearchVO" resultType="int">
+		SELECT COUNT(*)
+		FROM data_board
+		WHERE 1 = 1
+	</select>
+	
+	<!-- return 타입이 List일 때 <>안에 있는것을 작성 -->
+	<select id="getBoardList" parameterType="com.study.data.vo.DataSearchVO" resultType="dataBoard">
+		SELECT bo_no,
+				bo_title,
+				bo_category,
+				bo_writer,
+			 	bo_ip,
+				bo_hit,
+				TO_CHAR(bo_reg_date,'YYYY-MM-DD') AS bo_reg_date
+		FROM data_board
+		WHERE 1 = 1
+	</select>
+	
+	<select id="getBoard" parameterType="int" resultMap="mapForGetBoard">
+		SELECT a.bo_no
+		    , a.bo_title
+		    , a.bo_category
+		    , a.bo_writer
+		    , a.bo_pass
+		    , a.bo_content
+		    , a.bo_ip
+		    , a.bo_hit
+		    , TO_CHAR(a.bo_reg_date, 'YYYY-MM-DD') AS bo_reg_date
+		    , TO_CHAR(a.bo_mod_date, 'YYYY-MM-DD') AS bo_mod_date
+		    , a.bo_del_yn
+		    , b.atch_no
+		    , b.atch_original_name
+		    , b.atch_fancy_size
+		    , b.atch_down_hit
+		FROM data_board a
+		    LEFT JOIN attach b
+		    ON a.bo_no = b.atch_parent_no
+		    AND b.atch_category = 'DATA'
+		WHERE bo_no = #{monkey} /* 매개변수가 프리미티브일때는 이름 맘대로 */
+	</select>
+	
+	<insert id="insertBoard" parameterType="com.study.data.vo.DataBoardVO">
+		<selectKey keyProperty="boNo" resultType="int" order="BEFORE">
+			SELECT seq_data_board.NEXTVAL FROM DUAL
+		</selectKey>
+		
+		INSERT INTO data_board (
+		    bo_no        , bo_title   , bo_category
+		  , bo_writer    , bo_pass    , bo_content
+		  , bo_ip        , bo_hit     , bo_reg_date
+		  , bo_mod_date  , bo_del_yn
+		) VALUES (
+			<![CDATA[
+		    #{boNo}      , #{boTitle}  , #{boCategory}
+		  , #{boWriter}  , #{boPass}   , #{boContent}
+		  , #{boIp}      , 0           , SYSDATE
+		  , null         , 'N'
+		  ]]>
+		)
+	</insert>
+	
+	<update id="updateBoard" parameterType="com.study.data.vo.DataBoardVO">
+		UPDATE data_board
+		   SET bo_title = #{boTitle}
+		     , bo_content = #{boContent}
+		     , bo_mod_date = SYSDATE
+		 WHERE bo_no = #{boNo}
+	</update>
+</mapper>

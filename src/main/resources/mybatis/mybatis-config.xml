@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration
+  PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+	<settings>
+		<!--
+			컬럼에 언더바를 객체의 낙타식이름과 매핑을 자동으로 처리
+			모든 객체(VO)가 낙타식 명명규칙을 따라야 함 
+		 -->
+		<setting name="mapUnderscoreToCamelCase" value="true"/>
+		<setting name="jdbcTypeForNull" value="NULL"/>
+		<!-- 결과를 Map으로 주로 받는다면 설정 필요 -->
+		<setting name="callSettersOnNulls" value="true"/>
+	</settings>
+	
+	<typeAliases>
+		<typeAlias alias="dataBoard" type="com.study.data.vo.DataBoardVO"/>
+	</typeAliases>
+</configuration>
